@@ -65,10 +65,6 @@ const images = [
   },
 ];
 
-function cropStringLetters(str) {
-  return str.substring(1, str.length - 1);
-}
-
 const galleryItem = document.querySelector("ul.gallery");
 const galleryArr = [];
 let strGallery = "";
