@@ -68,17 +68,18 @@ const images = [
 const galleryItem = document.querySelector("ul.gallery");
 const galleryArr = [];
 let strGallery = "";
+let instance;
 
 for (const image of images) {
   const { preview, original, description } = image;
   const fragment = document.createDocumentFragment();
   fragment.outerHTML = `<li class="gallery-item">
-    <a class="gallery-link" href=${cropStringLetters(original)}>
+    <a class="gallery-link" href="${cropStringLetters(original)}">
       <img
         class="gallery-image"
-        src=${cropStringLetters(preview)}
-        data-source=${cropStringLetters(original)}
-        alt=${description}
+        src="${cropStringLetters(preview)}"
+        data-source="${cropStringLetters(original)}"
+        alt="${description}"
         width = 360
         height = 200
       />
@@ -88,3 +89,27 @@ for (const image of images) {
 }
 strGallery = galleryArr.join("");
 galleryItem.innerHTML = strGallery;
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    instance.close();
+  }
+});
+document.addEventListener("click", onGalleryClick);
+
+function cropStringLetters(str) {
+  return str.substring(1, str.length - 1);
+}
+
+function onGalleryClick(event) {
+  const instanceEvent = event.target;
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
+
+  const html = `<img class="modal-img" src=${instanceEvent.dataset.source} alt=${instanceEvent.alt} width="1112" height="640">`;
+
+  instance = basicLightbox.create(html);
+
+  instance.show();
+}
