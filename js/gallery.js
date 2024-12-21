@@ -73,21 +73,25 @@ let instance;
 for (const image of images) {
   const { preview, original, description } = image;
   const fragment = document.createDocumentFragment();
-  fragment.outerHTML = `<li class="gallery-item">
-    <a class="gallery-link" href="${cropStringLetters(original)}">
-      <img
-        class="gallery-image"
-        src="${cropStringLetters(preview)}"
-        data-source="${cropStringLetters(original)}"
-        alt="${description}"
-        width = 360
-        height = 200
-      />
-    </a>
-  </li>`;
-  galleryArr.push(fragment.outerHTML);
+  const liElem = document.createElement("li");
+  liElem.className = "gallery-item";
+  const aItem = document.createElement("a");
+  aItem.className = "gallery-link";
+  aItem.href = cropStringLetters(original);
+  const imgItem = document.createElement("img");
+  imgItem.className = "gallery-image";
+  imgItem.src = cropStringLetters(preview);
+  imgItem.dataset.source = cropStringLetters(original);
+  imgItem.alt = description;
+  imgItem.width = 360;
+  imgItem.height = 200;
+  aItem.append(imgItem);
+  liElem.append(aItem);
+  fragment.append(liElem);
+
+  galleryArr.push(fragment.children.item(0));
 }
-strGallery = galleryArr.join("");
+strGallery = galleryArr.map(el=>el.outerHTML).join("");
 galleryItem.innerHTML = strGallery;
 
 document.addEventListener("keydown", (event) => {
@@ -107,7 +111,7 @@ function onGalleryClick(event) {
     return;
   }
 
-  const html = `<img class="modal-img" src=${instanceEvent.dataset.source} alt=${instanceEvent.alt} width="1112" height="640">`;
+  const html = `<img class='modal-img' src='${instanceEvent.dataset.source}' alt='${instanceEvent.alt}' width='1112' height='640'>`;
 
   instance = basicLightbox.create(html);
 
